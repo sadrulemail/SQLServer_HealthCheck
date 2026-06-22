@@ -414,7 +414,7 @@ SELECT
     ips.page_count                                     AS Pages,
     CAST(ips.page_count * 8.0/1024 AS DECIMAL(12,2))   AS SizeMB,
     ips.avg_page_space_used_in_percent                 AS AvgPageFullnessPct,
-    i.fill_factor                                      AS FillFactor,
+    i.fill_factor                                      AS Fill_Factor,
     CASE
         WHEN ips.avg_fragmentation_in_percent > 30 THEN 'REBUILD'
         WHEN ips.avg_fragmentation_in_percent > 5  THEN 'REORGANIZE'
