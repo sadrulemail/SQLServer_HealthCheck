@@ -209,15 +209,17 @@ GO
 ------------------------------------------------------------------------------*/
 PRINT '===== 6. TRANSACTION LOG USAGE =====';
 
+-- Log size / used% for the CURRENT database (this DMV is scoped to current DB).
+-- NOTE: log_reuse_wait_desc is NOT on this DMV - it lives on sys.databases (see below).
 SELECT
-    DB_NAME(database_id)                AS DatabaseName,
-    CAST(total_log_size_in_bytes/1024.0/1024 AS DECIMAL(12,2))  AS LogSizeMB,
-    CAST(used_log_space_in_bytes/1024.0/1024 AS DECIMAL(12,2))  AS LogUsedMB,
-    CAST(used_log_space_in_percent AS DECIMAL(5,2))             AS LogUsedPct,
-    log_reuse_wait_desc                                         AS LogReuseWait  -- why log can't truncate
-FROM sys.dm_db_log_space_usage   -- per current DB context only on 2016 RTM
-                                 -- On 2017 sys.dm_db_log_stats also available
-;
+    DB_NAME(lsu.database_id)                                        AS DatabaseName,
+    CAST(lsu.total_log_size_in_bytes/1024.0/1024 AS DECIMAL(12,2)) AS LogSizeMB,
+    CAST(lsu.used_log_space_in_bytes/1024.0/1024 AS DECIMAL(12,2)) AS LogUsedMB,
+    CAST(lsu.used_log_space_in_percent AS DECIMAL(5,2))            AS LogUsedPct,
+    d.log_reuse_wait_desc                                          AS LogReuseWait  -- why log can't truncate
+FROM sys.dm_db_log_space_usage lsu
+JOIN sys.databases d ON d.database_id = lsu.database_id;
+
 -- Cross-DB log reuse reason (why VLFs aren't freed): LOG_BACKUP, ACTIVE_TRANSACTION, etc.
 SELECT name AS DatabaseName, log_reuse_wait_desc AS LogReuseWait
 FROM sys.databases
