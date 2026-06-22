@@ -520,7 +520,7 @@ SELECT
     sp.last_updated                        AS LastUpdated,
     sp.rows                                AS [Rows],
     sp.modification_counter                AS RowsModified,
-    CAST(100.0*sp.modification_counter/NULLIF(sp.rows,0) AS DECIMAL(6,2)) AS PctModified
+    CAST(100.0*sp.modification_counter/NULLIF(sp.rows,0) AS DECIMAL(16,2)) AS PctModified
 FROM sys.stats s
 CROSS APPLY sys.dm_db_stats_properties(s.object_id, s.stats_id) sp
 WHERE OBJECTPROPERTY(s.object_id,'IsUserTable')=1
