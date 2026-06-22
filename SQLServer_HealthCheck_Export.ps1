@@ -11,6 +11,7 @@
   EXAMPLES
     # Windows auth, default local instance, all server-wide + one target DB
     .\SQLServer_HealthCheck_Export.ps1 -ServerInstance "localhost" -TargetDatabase "MyDb"
+    powershell.exe -ExecutionPolicy Bypass -File "C:\Users\HP\SQLServer_HealthCheck_Export.ps1" -ServerInstance "localhost" -TargetDatabase "MyDb"
 
     # Named instance + SQL auth
     .\SQLServer_HealthCheck_Export.ps1 -ServerInstance "SRV01\SQL2017" `
