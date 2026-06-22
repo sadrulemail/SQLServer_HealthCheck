@@ -154,7 +154,7 @@ BEGIN
     -- 4c) bcp the data to a temp file
     SET @cmd = 'bcp "' + @q + '" queryout "' + @tmp + '" -c -t' + @Delim
              + ' -S "' + @srv + '"' + @BcpAuth + ' -d "' + @db + '"';
-    INSERT INTO #log (section, bcp_output)
+    INSERT INTO #log (bcp_output)          -- xp_cmdshell returns ONE column only
     EXEC xp_cmdshell @cmd;
     UPDATE #log SET section=@name WHERE section IS NULL;
 
